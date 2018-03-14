@@ -9,10 +9,7 @@ public class Board {
 	private boolean[][] isWall;
 	private int numRows;
 	private int numCols;
-	
-	public boolean isWall(int row, int col) {
-	    return isWall[row][col];
-	}
+
 
 	public Board(String path) {
 		// A instrução "try" delimita um trecho no qual erros
@@ -21,7 +18,7 @@ public class Board {
 			// Objetos da classe FileReader não possuem o método
 			// readLine, então construímos um objeto da classe
 			// BufferedReader "em volta" para dar essa capacidade.
-			BufferedReader reader = new BufferedReader(new FileReader("/Users/macbook/Downloads/teste.txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(path));
 
 			// Lê a primeira linha do arquivo e devolve como String.
 			String line = reader.readLine();
@@ -70,6 +67,11 @@ public class Board {
 		catch(IOException exception) {
 			System.out.println(exception);
 		}
+	}
+
+
+	public boolean isWall(int row, int col) {
+	    return isWall[row][col];
 	}
 
 

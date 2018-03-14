@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.net.URL;
-import java.util.Stack;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -23,12 +22,16 @@ public class View extends JPanel {
 	private Model model;
 	private Image cpuPlayerImage;
 	private Image humanPlayerImage;
-	
+	private Image targetImage;
+
+
 	public View(Model model) {
 		this.model = model;
 
 		cpuPlayerImage = loadImage("cpuPlayer");
 		humanPlayerImage = loadImage("humanPlayer");
+
+		targetImage = loadImage("target");
 
 		// Define o tamanho da componente, em pixels.
 		setPreferredSize(new Dimension(model.getBoard().getNumCols() * CELL_SIZE, model.getBoard().getNumRows() * CELL_SIZE));
@@ -46,26 +49,37 @@ public class View extends JPanel {
 
 	// Método para desenhar uma imagem a partir da posição de um jogador.
 	// Não é necessário entender todos os detalhes nesse momento.
-	private void drawImage(Graphics g, Image image, Player player) {
-		g.drawImage(image, player.getCol() * CELL_SIZE, player.getRow() * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
+	private void drawImage(Graphics g, Image image, Element element) {
+		g.drawImage(image, element.getCol() * CELL_SIZE, element.getRow() * CELL_SIZE, CELL_SIZE, CELL_SIZE, null);
 	}
 
 
 	// Método para desenhar a interface gráfica do jogo. A ideia é
 	// que o parâmetro g pode ser usado como o pincel de desenho.
-	
+	@Override
 	public void paintComponent(Graphics g) {
-		for(int i = 0; i <model.getBoard().getNumRows(); i++) {
-			for(int j = 0; j <model.getBoard().getNumCols(); j++) {
-				if (model.getBoard().isWall(i, j) == true){
-					g.setColor(Color.black);
-					g.fillRect(CELL_SIZE*j,CELL_SIZE*i,CELL_SIZE, CELL_SIZE);
+		for(int i = 0; i < model.getBoard().getNumRows(); i++) {
+			for(int j = 0; j < model.getBoard().getNumCols(); j++) {
+				if(model.getBoard().isWall(i, j)) {
+					// Define a cor do pincel como preto.
+					g.setColor(Color.BLACK);
 				}
+				else {
+					// Define a cor do pincel como branco.
+					g.setColor(Color.WHITE);
+				}
+
+				// Pinta um retângulo na posição e tamanho da célula.
+				g.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 			}
-	
+		}
+
+		// Pinta as imagens dos elementos.
+		drawImage(g, cpuPlayerImage, model.getCpuPlayer());
+		drawImage(g, humanPlayerImage, model.getHumanPlayer());
+		drawImage(g, targetImage, model.getTarget());
+
 		// Evita bugs visuais em alguns sistemas operacionais.
 		getToolkit().sync();
     }
 }
-}
-
